@@ -4,11 +4,11 @@
 
 前端在  [ruoyi-vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 3.8.1上简单修改，
 
-前端git：  [poem_vue_admin](https://github.com/lingdu1234/poem_vue_admin)   <https://github.com/lingdu1234/poem_vue_admin>
+前端git：  [actix_vue_admin](https://github.com/mengyou658/actix_vue_admin)   <https://github.com/mengyou658/actix_vue_admin>
 
-后端git：  [poem_admin](https://github.com/lingdu1234/poem_admin)   <https://github.com/lingdu1234/poem_admin>
+后端git：  [actix_admin](https://github.com/mengyou658/actix_admin)   <https://github.com/mengyou658/actix_admin>
 
-预览地址：
+预览地址：可参考[poem_vue_admin](https://github.com/lingdu1234/poem_vue_admin)
 [poem-vue-admin.vercel.app](https://poem-vue-admin.vercel.app/)
 [预览地址](https://poem.iu314.top/)
 

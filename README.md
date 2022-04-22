@@ -1,6 +1,6 @@
 ## 平台简介
 
-后端 使用poem 编写, 完成了基础的api，算是一个demo实例吧，
+后端 使用actix-web 编写, 完成了基础的api，基于[https://github.com/lingdu1234/poem_admin](https://github.com/lingdu1234/poem_admin)做的后端改造
 
 前端在  [ruoyi-vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 3.8.1上简单修改，
 
@@ -8,10 +8,7 @@
 
 后端git：  [actix_admin](https://github.com/mengyou658/actix_admin)   <https://github.com/mengyou658/actix_admin>
 
-预览地址：可参考[poem_vue_admin](https://github.com/lingdu1234/poem_vue_admin)
-[poem-vue-admin.vercel.app](https://poem-vue-admin.vercel.app/)
-[预览地址](https://poem.iu314.top/)
-
+预览地址：可以参考[https://github.com/lingdu1234/poem_admin](https://github.com/lingdu1234/poem_admin)
 ## 完成的功能
 
 - [x] 用户管理：用户是系统操作者，该功能主要完成系统用户配置。

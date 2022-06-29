@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">LingDu后台管理系统</h3>
+      <h3 class="title">若依后台管理系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -41,6 +41,7 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <el-tag  style="margin:0px 0px 25px 0px;">账号：admin 或者 user 密码：123456 验证码区分大小写</el-tag>
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -65,14 +66,13 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
+import useUserStore from '@/store/modules/user'
 import { getCurrentInstance,ref} from "vue";
-
-const store = useStore();
+import { useRouter } from "vue-router";
+const userStore = useUserStore()
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 
@@ -114,7 +114,7 @@ function handleLogin() {
         Cookies.remove("rememberMe");
       }
       // 调用action的登录方法
-      store.dispatch("Login", loginForm.value).then(() => {
+      userStore.login(loginForm.value).then(() => {
         router.push({ path: redirect.value || "/" });
       }).catch(() => {
         loading.value = false;

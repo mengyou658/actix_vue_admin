@@ -1,33 +1,20 @@
 <template>
   <div class="navbar">
-    <hamburger
-      id="hamburger-container"
-      :is-active="getters.sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
-    <breadcrumb
-      id="breadcrumb-container"
-      class="breadcrumb-container"
-      v-if="!$store.state.settings.topNav"
-    />
-    <top-nav
-      id="topmenu-container"
-      class="topmenu-container"
-      v-if="$store.state.settings.topNav"
-    />
+    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
+    <top-nav id="topmenu-container" class="topmenu-container" v-if="settingsStore.topNav" />
 
     <div class="right-menu">
-      <template v-if="getters.device !== 'mobile'">
+      <template v-if="appStore.device !== 'mobile'">
         <header-search id="header-search" class="right-menu-item" />
 
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <!-- <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
+<!--        <el-tooltip content="文档地址" effect="dark" placement="bottom">-->
+<!--          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />-->
+<!--        </el-tooltip>-->
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -36,13 +23,9 @@
         </el-tooltip>
       </template>
       <div class="avatar-container">
-        <el-dropdown
-          @command="handleCommand"
-          class="right-menu-item hover-effect"
-          trigger="click"
-        >
+        <el-dropdown @command="handleCommand" class="right-menu-item hover-effect" trigger="click">
           <div class="avatar-wrapper">
-            <img :src="getters.avatar" class="user-avatar" />
+            <img :src="userStore.avatar" class="user-avatar" />
             <el-icon><caret-bottom /></el-icon>
           </div>
           <template #dropdown>
@@ -96,7 +79,6 @@
 
 <script setup>
 import { computed,getCurrentInstance,ref } from 'vue';
-import { useStore } from 'vuex';
 import { ElMessageBox } from 'element-plus';
 import Breadcrumb from '@/components/Breadcrumb';
 import TopNav from '@/components/TopNav';
@@ -110,8 +92,14 @@ import { listRole } from '@/api/system/role';
 import { listDept } from '@/api/system/dept';
 import { changeUserRole, changeUserDept } from '@/api/system/user';
 
-const store = useStore();
-const getters = computed(() => store.getters);
+import useAppStore from '@/store/modules/app'
+import useUserStore from '@/store/modules/user'
+import useSettingsStore from '@/store/modules/settings'
+
+const appStore = useAppStore()
+const userStore = useUserStore()
+const settingsStore = useSettingsStore()
+
 const { proxy } = getCurrentInstance();
 
 const role_id = ref(null);
@@ -134,25 +122,25 @@ async function get_options() {
   let max_length = 0;
   let r = roles.filter((item, index, arr) => {
     max_length = Math.max(max_length, item.role_name.length);
-    return getters.value.roles.includes(item.role_id);
+    return userStore.roles.includes(item.role_id);
   });
   let d = depts.filter((item, index, arr) => {
     map[item.dept_id] = item.dept_name;
     max_length = Math.max(max_length, item.dept_name.length);
-    return getters.value.depts.includes(item.dept_id);
+    return userStore.depts.includes(item.dept_id);
   });
   width.value = max_length * 16 + 22;
   roleOptions.value = r;
-  role_id.value = getters.value.role;
+  role_id.value = userStore.role;
   deptOptions.value = d;
   deptMapOptions.value = map;
-  dept_id.value = getters.value.dept;
+  dept_id.value = userStore.dept;
 }
 
 get_options();
 
 async function roleChanged(v) {
-  await changeUserRole(getters.value.uid, v);
+  await changeUserRole(userStore.uid, v);
   proxy.$modal.msgSuccess('角色切换成功,马上重载界面');
 
   setTimeout(() => {
@@ -161,7 +149,7 @@ async function roleChanged(v) {
 }
 
 async function deptChanged(v) {
-  await changeUserDept(getters.value.uid, v);
+  await changeUserDept(userStore.uid, v);
   proxy.$modal.msgSuccess('部门切换成功,马上重载界面');
 
   setTimeout(() => {
@@ -169,15 +157,15 @@ async function deptChanged(v) {
   }, 1000);
 }
 function toggleSideBar() {
-  store.dispatch('app/toggleSideBar');
+  appStore.toggleSideBar()
 }
 
 function handleCommand(command) {
   switch (command) {
-    case 'setLayout':
+    case "setLayout":
       setLayout();
       break;
-    case 'logout':
+    case "logout":
       logout();
       break;
     default:
@@ -189,23 +177,21 @@ function logout() {
   ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(() => {
-      store.dispatch('LogOut').then(() => {
-        location.href = '';
-      });
+    type: 'warning'
+  }).then(() => {
+    userStore.logOut().then(() => {
+      location.href = '';
     })
-    .catch(() => {});
+  }).catch(() => { });
 }
 
-const emits = defineEmits(['setLayout']);
+const emits = defineEmits(['setLayout'])
 function setLayout() {
   emits('setLayout');
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .navbar {
   height: 50px;
   overflow: hidden;
